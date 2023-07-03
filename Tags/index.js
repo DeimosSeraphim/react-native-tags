@@ -18,22 +18,22 @@ class Tags extends React.Component {
 
   showLastTag = () => {
     this.setState(state =>
-      ({
-        tags: state.tags.slice(0, -1),
-        text: state.tags.slice(-1)[0] || " "
-      }),
-      () =>
-        this.props.onChangeTags && this.props.onChangeTags(this.state.tags)
+            ({
+              tags: state.tags.slice(0, -1),
+              text: state.tags.slice(-1)[0] || ""
+            }),
+        () =>
+            this.props.onChangeTags && this.props.onChangeTags(this.state.tags)
     );
   };
 
   addTag = text => {
     this.setState(state =>
-      ({
-        tags: [...state.tags, text.trim()],
-        text: " "
-      }),
-      () => this.props.onChangeTags && this.props.onChangeTags(this.state.tags)
+            ({
+              tags: [...state.tags, text.trim()],
+              text: " "
+            }),
+        () => this.props.onChangeTags && this.props.onChangeTags(this.state.tags)
     );
   };
 
@@ -41,10 +41,10 @@ class Tags extends React.Component {
     if (text.length === 0) {
       this.showLastTag();
     } else if (
-      text.length > 1 &&
-      this.props.createTagOnString.includes(text.slice(-1)) &&
-      !text.match(new RegExp(`^[${this.props.createTagOnString.join("")}]+$`, 'g')) &&
-      !(this.state.tags.indexOf(text.slice(0, -1).trim()) > -1)
+        text.length > 1 &&
+        this.props.createTagOnString.includes(text.slice(-1)) &&
+        !text.match(new RegExp(`^[${this.props.createTagOnString.join("")}]+$`, 'g')) &&
+        !(this.state.tags.indexOf(text.slice(0, -1).trim()) > -1)
     ) {
       this.addTag(text.slice(0, -1));
     } else {
@@ -70,57 +70,58 @@ class Tags extends React.Component {
       tagTextStyle,
       deleteTagOnPress,
       onTagPress,
-      renderTag
+      renderTag,
+      providedTags
     } = this.props;
 
     return (
-      <View style={[styles.container, containerStyle, style]}>
+        <View style={[styles.container, containerStyle, style]}>
 
-        {this.state.tags.map((tag, index) => {
+          {(providedTags || this.state.tags).map((tag, index) => {
 
-          const tagProps = {
-            tag,
-            index,
-            deleteTagOnPress,
-            onPress: event => {
-              event?.persist();
-              if (deleteTagOnPress && !readonly) {
-                this.setState(state =>
-                  ({
-                    tags: [
-                      ...state.tags.slice(0, index),
-                      ...state.tags.slice(index + 1)
-                    ]
-                  }),
-                  () => {
-                    this.props.onChangeTags &&
-                      this.props.onChangeTags(this.state.tags);
-                    onTagPress && onTagPress(index, tag, event, true);
-                  }
-                );
-              } else {
-                onTagPress && onTagPress(index, tag, event, false);
-              }
-            },
-            tagContainerStyle,
-            tagTextStyle
-          };
+            const tagProps = {
+              tag,
+              index,
+              deleteTagOnPress,
+              onPress: event => {
+                event?.persist();
+                if (deleteTagOnPress && !readonly) {
+                  this.setState(state =>
+                          ({
+                            tags: [
+                              ...state.tags.slice(0, index),
+                              ...state.tags.slice(index + 1)
+                            ]
+                          }),
+                      () => {
+                        this.props.onChangeTags &&
+                        this.props.onChangeTags(this.state.tags);
+                        onTagPress && onTagPress(index, tag, event, true);
+                      }
+                  );
+                } else {
+                  onTagPress && onTagPress(index, tag, event, false);
+                }
+              },
+              tagContainerStyle,
+              tagTextStyle
+            };
 
-          return renderTag(tagProps);
-        })}
+            return renderTag(tagProps);
+          })}
 
-        {!readonly
-          && maxNumberOfTags > this.state.tags.length
-          &&
-          <Input
-            value={this.state.text}
-            onChangeText={this.onChangeText}
-            onSubmitEditing={this.onSubmitEditing}
-            {...this.props}
-          />
-        }
+          {!readonly
+              && maxNumberOfTags > this.state.tags.length
+              &&
+              <Input
+                  value={this.state.text}
+                  onChangeText={this.onChangeText}
+                  onSubmitEditing={this.onSubmitEditing}
+                  {...this.props}
+              />
+          }
 
-      </View>
+        </View>
     );
   };
 
@@ -128,14 +129,14 @@ class Tags extends React.Component {
 
 Tags.defaultProps = {
   initialTags: [],
-  initialText: " ",
+  initialText: "",
   createTagOnString: [",", " "],
   createTagOnReturn: false,
   readonly: false,
   deleteTagOnPress: true,
   maxNumberOfTags: Number.POSITIVE_INFINITY,
   renderTag: ({ tag, index, ...rest }) => (
-    <Tag key={`${tag}-${index}`} label={tag} {...rest} />
+      <Tag key={`${tag}-${index}`} label={tag} {...rest} />
   )
 };
 
