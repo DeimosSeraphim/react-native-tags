@@ -56,6 +56,7 @@ class Tags extends React.Component {
     if (!this.props.createTagOnReturn) {
       return;
     }
+    // Don nothing for empty tag
     if (this.state.text.length > 0) {
       this.addTag(this.state.text)
     }
